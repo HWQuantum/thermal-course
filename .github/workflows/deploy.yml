@@ -42,9 +42,6 @@ jobs:
       - name: Install Jupyter Book (via myst)
         run: npm install -g jupyter-book
 
-      - name: Install LaTeX (for PDF export)
-        run: ...
-
       - name: Build site (HTML + PDFs)
         run: |
           jupyter-book build --html
