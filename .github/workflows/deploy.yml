@@ -48,15 +48,15 @@ jobs:
         run: |
           jupyter-book build --html
 
-      - name: Install JupyterLite + Pyodide kernel
+      - name: Install JupyterLite + Pyodide kernel + widgets
         run: |
           python -m pip install --upgrade pip
           python -m pip install \
-          jupyterlite \
-          jupyterlite-pyodide-kernel \
-          jupyterlite-core \
-          jupyter_server \
-          jupyterlab_server
+            jupyterlite \
+            jupyterlite-pyodide-kernel \
+             jupyter_server \
+             jupyterlab_server \
+             jupyterlab_widgets
 
       - name: Build JupyterLite into the deployed site
         run: |
