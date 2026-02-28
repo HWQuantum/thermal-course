@@ -1,7 +1,7 @@
 ---
 exports:
   - format: pdf
-    output: _build/html/exports/lab1.pdf
+    output: ../_build/html/exports/lab1.pdf
 downloads:
   - title: Download PDF
     url: /thermal-course/exports/lab1.pdf
