@@ -1,20 +1,25 @@
-# Lab 1 — Entropy Mixing
-
+---
+authors:
+  - name: Physics, Heriot-Watt University
+exports:
+  - format: pdf
+    output: ../_build/html/exports/lab3.pdf
+downloads:
+  - title: Download PDF
+    url: /thermal-course/exports/lab3.pdf
 ---
 
-# Thermal Physics Lab 1 — Entropy Increase Due to Convection and Conduction
 
-**Physics, Heriot-Watt University**
+# Lab 3 - The Heat Diffusion Equation - Fourier Transform
+# Overview
 
----
 
-## Overview
 
-In this lab, we will create a simulation designed to illustrate the concept of entropy increase through either convection or conduction. The simulation will show how a system with several hot particles separated from cold particles evolves as the particles mix and exchange energy.  We will start by initialising an array of $N$ particles with the hot particles originally separated from the cold particles.  As time evolves, neighbouring particles can either swap positions, representing convection, or they can exchange energy, representing conduction.  We find that the entropy increases with time, reflecting a loss of spatial information about where the hot particles are.  This is an example of the second law of thermodynamics, which states that the entropy of a closed system will increase or remain constant with time.
+# Overview
 
-This simulation is an example of predictable macroscopic behaviour emerging from simple rules of microscopic states.  We can make some simple assumptions about how two neighbouring particles might interact with each other, and then observe how these influence the properties of the combined system.  
+In this lab, we will solve the heat diffusion equation via a Fourier-based method, representing the conduction of heat through a solid as time evolves. The simulation will show how a system with an initial localised area of heat will transition to a system where the heat is distributed throughout space.  We will start by initialising an array that represents where the heat in a sample is and then use the Fourier method to solve the equation and update the spatial distribution of heat as time evolves.  We find that the heat distribution at time $t+\Delta t$ is equal to the inverse Fourier transform of the Fourier transform of the current heat distribution multiplied by a Gaussian function.  In the Fourier domain, the multiplication by the Gaussian attenuates the high spatial frequency components of the temperature distribution. 
 
-In this case, we the only update rule that we apply is that neighbouring particles can either swap locations (simulating convection) or exchange and average their energies (simulating conduction).  These simple rules then result in a predictable increase in entropy associated with the location of the heat in a system.  An important outcome is that we can be confident of the long-term behaviour of the system (increase in entropy), but we cannot predict what will happen in any one time step (the entropy may go up or down).
+This simulation is an example of using a Fourier-based approach for solving a second-order partial differential equation.  As with the finite difference method, a similar approach can be used to solve many other similar differential equations. 
 
 
 ---
@@ -23,69 +28,52 @@ In this case, we the only update rule that we apply is that neighbouring particl
 
 By the end of this lab you should be able to:
 
-- Simulate convection and/or conduction of heat via simple update rules.
-- Describe entropy as a measure of spatial distribution of energy.
-- Understand that small fluctuations can temporarily reduce entropy.
-- Explain how microscopic randomness produces predictable macroscopic behaviour.
+- Understand the physical principles behind thermal diffusion.
+- Learn how to numerically solve the one-dimensional heat equation using Fourier-based methods.
+- Implement the method in MATLAB and analyze the temperature evolution in a solid.
+- Understand the extension of the method to two and three dimensions.
+- Understand the extension of the method to include the addition of heat sources.
+- Understand the advantages and disadvantages of this method versus the finite difference approach
 
 ---
 
 # Background
 
-## Shannon Entropy
+## Exponential Decay and Newton's Law of Cooling
 
-The Shannon entropy is
+Before solving the heat equation, it's helpful to understand a simpler example of exponential decay, which is Newton's Law of Cooling. This describes the temperature \( T(t) \) of an object as it cools in a surrounding environment of constant temperature \( T_{\text{env}} \). The rate of cooling is proportional to the temperature difference
+%
+\begin{equation}
+\frac{dT}{dt} = -\kappa(T - T_{\text{env}}),
+\label{eq:newton}
+\end{equation}
+%
+where \( \kappa > 0 \) is a cooling constant.
 
-$$
-S = -\sum_i p_i \log_2 p_i
-$$
+## Solution
 
-where $p_i$ is the probability of a random event occurring.
+We can solve this first-order ODE by separating variables
+%
+\[
+\frac{dT}{T - T_{\text{env}}} = -\kappa\,dt.
+\]
+%
+Integrating both sides we get
+%
+\[
+\ln|T - T_{\text{env}}| = -\kappa t + C
+\quad \Rightarrow \quad
+T(t) = T_{\text{env}} + (T_0 - T_{\text{env}}) e^{-\kappa t}.
+\]
+%
+This shows that the temperature approaches the environment temperature exponentially over time.  It is important to note that to find the temperature at any future time, we only need to know the initial conditions ($T_0$ and $T_{\text{env}}$) and the time $t$.
 
-Using $\log_2$ gives entropy in **bits**.
+## connection to the Heat Equation
 
----
+This solution is of the same form as the solution to the Fourier-transformed heat equation (Equation 4 in this document), where each Fourier mode decays exponentially in time:
 
-## Gibbs and Boltzmann Entropy
+\[
+\hat{T}(k,t) = \hat{T}(k,0) e^{-\alpha k^2 t}
+\]
 
-In statistical mechanics,
-
-$$
-S = -k_B \sum_i p_i \ln p_i
-$$
-
-If all microstates are equally probable, $p_i = 1/\Omega$, giving
-
-$$
-S = k_B \ln \Omega.
-$$
-
-If $\Omega = 1$, then $S = 0$.
-
----
-
-## Second Law of Thermodynamics
-
-For an isolated system,
-
-$$
-\Delta S_{\text{total}} \ge 0.
-$$
-
-Entropy increases until equilibrium is reached.
-
----
-
-## Convection vs Conduction
-
-- **Convection** → swap neighbouring particles.
-- **Conduction** → average neighbouring energies.
-
----
-
-# Simulation Details
-
-```{figure} ../assets/images/Entropy.png
-:width: 90%
-
-Schematic illustration of entropy increase during mixing.
+Understanding Newton's Law of Cooling helps recognise exponential decay in thermal processes, and see how the system relaxes toward equilibrium over time.
