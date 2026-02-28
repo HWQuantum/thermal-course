@@ -14,9 +14,6 @@ downloads:
 # Overview
 
 
-
-# Overview
-
 In this lab, we will solve the heat diffusion equation via a Fourier-based method, representing the conduction of heat through a solid as time evolves. The simulation will show how a system with an initial localised area of heat will transition to a system where the heat is distributed throughout space.  We will start by initialising an array that represents where the heat in a sample is and then use the Fourier method to solve the equation and update the spatial distribution of heat as time evolves.  We find that the heat distribution at time $t+\Delta t$ is equal to the inverse Fourier transform of the Fourier transform of the current heat distribution multiplied by a Gaussian function.  In the Fourier domain, the multiplication by the Gaussian attenuates the high spatial frequency components of the temperature distribution. 
 
 This simulation is an example of using a Fourier-based approach for solving a second-order partial differential equation.  As with the finite difference method, a similar approach can be used to solve many other similar differential equations. 

@@ -16,4 +16,7 @@
   <url>
     <loc>http://localhost:3002/lab4</loc>
   </url>
+  <url>
+    <loc>http://localhost:3002/lite-coin-entropy</loc>
+  </url>
 </urlset>
