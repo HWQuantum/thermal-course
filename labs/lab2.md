@@ -4,8 +4,10 @@ authors:
 exports:
   - format: pdf
     output: _build/site/exports/lab2.pdf
+downloads:
+  - title: Download PDF
+    url: /exports/lab2.pdf
 ---
-
 
 # Lab 2 - The Heat Diffusion Equation - Finite Difference
 # Overview

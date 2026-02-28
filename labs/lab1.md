@@ -4,6 +4,9 @@ authors:
 exports:
   - format: pdf
     output: _build/site/exports/lab1.pdf
+downloads:
+  - title: Download PDF
+    url: /exports/lab1.pdf
 ---
 
 # Lab 1 - Entropy Increase
