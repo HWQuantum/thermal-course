@@ -14,10 +14,9 @@ site:
       © 2026 Thermal Physics Simulations  
       Physics Department — Heriot-Watt University
 
-format:
-  html:
-    sanitize: false
-    
+html:
+  use_sanitize: false
+
 exports:
   - format: html
   - format: pdf
