@@ -54,15 +54,14 @@ where $p_i$ is the probability of a random event occurring.  The Shannon entropy
 
 <div style="border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
   <iframe
-    src="/thermal-course/lite/retro/index.html?path=lite_coin_entropy.ipynb"
+    src="https://hwquantum.github.io/thermal-course/lite/retro/index.html?path=lite_coin_entropy.ipynb"
     width="100%"
-    height="850"
+    height="900"
     style="border:0;"
     loading="lazy"
     allow="clipboard-read; clipboard-write"
   ></iframe>
 </div>
-
 ---
 
 ## Gibbs and Boltzmann's entropy
