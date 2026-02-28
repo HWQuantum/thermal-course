@@ -43,15 +43,11 @@ jobs:
         run: npm install -g jupyter-book
 
       - name: Install LaTeX (for PDF export)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended texlive-xetex
+        run: ...
 
       - name: Build site (HTML + PDFs)
         run: |
           jupyter-book build --html
-          jupyter-book build --pdf labs/lab1.md
-          jupyter-book build --pdf labs/lab2.md
 
       - name: Install JupyterLite (with server deps)
         run: |
