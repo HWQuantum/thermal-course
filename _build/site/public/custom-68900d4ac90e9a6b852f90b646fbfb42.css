@@ -1,0 +1,6 @@
+/* Make the top-left header logo bigger */
+/* Header logo sizing (MyST book theme) */
+.navbar-brand-logo {
+  height: 84px !important;   /* try 64 / 84 / 100 */
+  width: auto !important;
+}

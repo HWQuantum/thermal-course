@@ -1,0 +1,4 @@
+/* DEBUG: outline every image so we can see what’s in the header */
+header img { outline: 4px solid red !important; }
+header svg { outline: 4px solid lime !important; }
+header a { outline: 2px dashed cyan !important; }

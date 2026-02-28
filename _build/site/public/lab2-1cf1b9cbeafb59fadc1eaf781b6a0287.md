@@ -1,0 +1,203 @@
+
+# Lab 2 - The Heat Diffusion Equation - Finite Difference
+# Overview
+
+In this lab, we will solve the heat diffusion equation, representing the conduction of heat through a solid as time evolves. The simulation will show how a system with an initial localised area of heat will transition to a system where the heat is distributed throughout space.  We will start by initialising an array that represents where the heat in a sample is and then use the finite-difference method to solve the equation and update the spatial distribution of heat as time evolves.  We find that the heat distribution at time $t+\Delta t$ is equal to the current heat distribution plus a constant times the curvature of the distribution.  That is to say that areas of sharp peaks or valleys in temperature will change the fastest as these are the areas with the highest spatial curvatures. The curvature is measured by numerically calculating the second-order derivative of temperature with respect to space.
+
+This simulation is an example of using a finite difference approach for solving a second-order partial differential equation.  A very similar approach can be used to solve many other similar differential equations.  Two examples are the wave equation for simulating light or sound propagation, and the Schr$\ddot{\text{o}}$dinger equation for simulating wave function evolution in quantum mechanics.  There are special requirements in each case that are needed to ensure the stability of the solutions.  In this case, we can ensure stability through the Courant–Friedrichs–Lewy (CFL) condition, which relates the time step size to the discretisation in space.
+
+
+---
+
+## How will you be assessed?
+
+At the end of the lab, you will submit a single MATLAB .m file that performs the simulation and generates the required plots. Your code should be clearly commented to demonstrate understanding of the numerical method and the underlying physics.
+
+In order to pass this lab, your code must:
+
+- Correctly implement the finite difference method
+- Produce physically reasonable results
+- Include appropriate plots with labelled axes
+
+This is a pass/fail lab.
+
+---
+
+## Learning Outcomes
+
+The objectives of this lab are to:
+
+- Understand the one-dimensional heat equation.
+- Implement a finite difference approximation.
+- Explore numerical stability conditions.
+- Interpret the physical meaning of diffusion.
+
+---
+
+# Background
+
+```{figure} ../assets/images/Heat_diffusion.png
+:width: 80%
+:align: center
+:name: target
+
+The problem that we will solve is given an initial spatial temperature distribution at time = 0, what is the temperature distribution at time = $t$?
+```
+
+
+## One dimensional diffusion equation
+
+The heat diffusion equation (or simply, the heat equation) describes how heat flows in a medium over time. In one dimension, it is given by:
+%
+\begin{align}
+\frac{\partial T(x,t)}{\partial t} = \alpha \frac{\partial^2 T(x,t)}{\partial x^2}
+\end{align}
+%
+where $T(x,t)$ is the temperature at position $x$ and time $t$, and $\alpha$ is the thermal diffusivity.  This equation assumes that we have a constant thermal diffusivity $\alpha$, there are no internal heat source, and this for the one-dimensional case (e.g. a rod).  Simple modifications of the equation can introduce additional features, such as internal sources of heat, and the same concepts are applied when solving the equation in 2 and 3 dimensions. 
+
+## Two dimensional diffusion equation
+
+The two-dimensional diffusion equation is given by
+%
+\begin{align}
+\frac{\partial T(x, y, t)}{\partial t} = \alpha \left( \frac{\partial^2 T}{\partial x^2} + \frac{\partial^2 T}{\partial y^2} \right) = \alpha \nabla^2 T.
+\end{align}
+%
+
+
+---
+
+## Finite Difference Approximation
+
+```{figure} ../assets/images/Derivatives.png
+:width: 80%
+:align: center
+:name: target
+
+The heat diffusion equation is solved by taking the current distribution given by $T(x, t)$ and adding $\alpha$ times the curvature in space times $\Delta t$.
+```
+
+To find a numerical solution, we discretize the heat equation using the finite-difference method. If we discretize time in to steps of size $\Delta t$ and leave space continuous, we see that 
+%
+\begin{align}\label{solution}
+\frac{\partial T(x,t)}{\partial t} \approx \frac{T(x, t+\Delta t)-T(x, t)}{\Delta t} & =  \alpha \frac{\partial^2 T(x, t)}{\partial x^2} ,\\
+\rightarrow T(x, t+\Delta t) & = T(x, t) +\alpha \frac{\partial^2 T(x, t)}{\partial x^2} \Delta t,
+\end{align}
+%
+which, in words, means that the temperature distribution $T(x)$ at time $t + \Delta t $ is equal to the current temperature distribution plus $\alpha$ times the curvature in space times $\Delta t$.  We can then define a grid with spatial steps $\Delta x$, so that the numerically evaluated curvature is equal to 
+%
+\begin{align}\label{solution}
+\frac{\partial^2 T(x,t)}{\partial x^2} \approx \frac{\frac{  T({x+1},t) - T(x,t)}{\Delta x}-\frac{  T(x,t) - T(x-1,t)}{\Delta x}}{\Delta x} =  \frac{  T({x+1},t) - 2T(x,t) + T(x-1,t) }{(\Delta x)^2}
+\end{align}
+%
+A visual guide to equation \ref{solution} is given in figure \ref{derivatives}.  This means that the discrete version of the equation becomes:
+%
+\begin{align}
+T(x,{t+\Delta t}) = T(x, t) + \alpha \frac{   T({x+1},t) - 2T(x,t) + T(x-1,t) }{(\Delta x)^2} \Delta t.
+\end{align}
+%
+This is often written as
+%
+\begin{align}
+T_i^{n+1} = T_i^n + \alpha \frac{\Delta t}{(\Delta x)^2} \left( T_{i+1}^n - 2T_i^n + T_{i-1}^n \right),
+\end{align}
+%
+where the $x$ spatial position is replaced with the index $i$, and the time $t$ is replaced with the temopral index $n$.  This is useful when using a computer to solve the equation numerically. 
+
+
+```{figure} ../assets/images/Numerical_derivative.png
+:width: 80%
+:align: center
+:name: Num_derivative
+
+Visual aid for how the numerical gradient and curvature of a function are calculated numerically.  The gradient is the difference between the function's values on either side of the point of interest divided by $2 \Delta x$.  The curvature is the difference in the gradient on either side of the point of interest divided by $\Delta x$.
+
+```
+
+
+
+---
+
+## Stability Condition
+
+In many numerical approaches to solving partial differential equations, there are conditions that are required for stability of the solution. For stability in this case, we need to ensure that the Courant–Friedrichs–Lewy (CFL) condition is satisfied.  This places a limit on the size of $\alpha \Delta t$ compared to $(\Delta x)^2$ according to
+%
+\begin{align}
+\frac{\alpha \Delta t}{(\Delta x)^2} \leq \frac{1}{2}.
+\end{align}
+%
+If this condition is not met, you will find that the numerical solution becomes unstable.
+
+---
+
+# Simulation Details
+
+You will simulate heat diffusion along a rod of length $L$.
+
+1. Discretise the rod into $N$ spatial points.
+2. Choose a time step $\Delta t$ satisfying the stability condition.
+3. Apply boundary conditions (e.g., fixed temperature at both ends).
+4. Evolve the temperature distribution over time.
+
+---
+
+## Physical Interpretation
+
+Heat flows from regions of high temperature to low temperature. The finite difference method allows us to approximate this process numerically. Over time, sharp temperature gradients smooth out, and the system approaches thermal equilibrium.
+
+The rate of diffusion depends on the thermal diffusivity $\alpha$. Larger values of $\alpha$ lead to faster smoothing of temperature differences.
+
+---
+
+## Pseudo Code
+
+```{admonition} Algorithm
+:class: algorithm
+:name: alg-heat-diffusion
+
+**Heat Diffusion Simulation (1D Finite Difference)**
+
+**Initialisation**
+
+1. Define rod length $L$ and number of spatial points $N$.
+2. Define thermal diffusivity $\alpha$.
+3. Choose spatial step size $\Delta x = L/(N-1)$.
+4. Choose time step $\Delta t$ such that
+   $$
+   r = \frac{\alpha \Delta t}{(\Delta x)^2} \le \frac{1}{2}.
+   $$
+5. Initialise temperature vector $T$ with chosen initial condition.
+6. Apply boundary conditions.
+
+**Time Evolution**
+
+For each time step $n$:
+
+1. For each interior point $i = 2, \dots, N-1$:
+   $$
+   T_i^{n+1}
+   =
+   T_i^n
+   +
+   r \left( T_{i+1}^n - 2T_i^n + T_{i-1}^n \right)
+   $$
+
+2. Apply boundary conditions to $T^{n+1}$.
+3. Store temperature profile if required.
+4. Plot temperature profile at chosen intervals.
+```
+
+# Target Results
+
+You should observe:
+	•	Heat diffusing smoothly along the rod.
+	•	Temperature gradients decreasing with time.
+	•	Stability when $r \le 1/2$.
+	•	Instability when the stability condition is violated.
+
+# Further Investigation
+
+	1.	Explore different initial temperature distributions.
+	2.	Investigate what happens when the stability condition is violated.
+	3.	Compare numerical results with analytical solutions (if available).
+	4.	Extend the simulation to two dimensions.

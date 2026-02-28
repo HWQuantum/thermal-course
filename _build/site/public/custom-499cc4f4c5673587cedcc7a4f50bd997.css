@@ -1,0 +1,5 @@
+/* Make the top-left header logo bigger */
+.site-logo img {
+  height: 220px !important;   /* try 56px / 72px / 90px */
+  width: auto !important;
+}

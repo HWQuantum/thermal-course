@@ -1,0 +1,6 @@
+.site-logo img,
+.navbar-brand img,
+.navbar-brand-logo {
+  height: 2px !important;
+  width: auto !important;
+}

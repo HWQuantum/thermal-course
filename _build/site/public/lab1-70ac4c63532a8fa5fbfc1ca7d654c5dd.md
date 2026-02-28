@@ -1,0 +1,155 @@
+---
+title: Thermal Physics Lab 1: Entropy Increase Due to Convection and Conduction
+---
+
+# Thermal Physics Lab 1: Entropy Increase Due to Convection and Conduction
+
+Physics, Heriot-Watt University
+
+---
+
+## Overview
+
+In this lab, we will create a simulation designed to illustrate the concept of entropy increase through either convection or conduction. The simulation will show how a system with several hot particles separated from cold particles evolves as the particles mix and exchange energy.  We will start by initialising an array of $N$ particles with the hot particles originally separated from the cold particles.  As time evolves, neighbouring particles can either swap positions, representing convection, or they can exchange energy, representing conduction.  We find that the entropy increases with time, reflecting a loss of spatial information about where the hot particles are.  This is an example of the second law of thermodynamics, which states that the entropy of a closed system will increase or remain constant with time.
+
+This simulation is an example of predictable macroscopic behaviour emerging from simple rules of microscopic states.  We can make some simple assumptions about how two neighbouring particles might interact with each other, and then observe how these influence the properties of the combined system.  
+
+In this case, we the only update rule that we apply is that neighbouring particles can either swap locations (simulating convection) or exchange and average their energies (simulating conduction).  These simple rules then result in a predictable increase in entropy associated with the location of the heat in a system.  An important outcome is that we can be confident of the long-term behaviour of the system (increase in entropy), but we cannot predict what will happen in any one time step (the entropy may go up or down).
+
+---
+
+## How will you be assessed?
+
+At the end of the lab, you will hand in a single MATLAB .m file that contains your simulation and generates your results.  You should comment your code throughout, so that it is clear that you understand the physics and the results.  Make sure that all plots and graphs have suitable axes and labels.
+
+In order to pass this lab, your code must run and generate results in line with the learning objectives below. This is a pass/fail lab, so you will be given 100% if your code meets the minimum requirements, and 0% if you do not.
+
+**In addition to the baseline results, you are expected to try some of the “Further Investigation," detailed in Section 8.**
+
+---
+
+## Learning Outcomes
+
+The objectives of this lab are to:
+
+- How to simulate convection and/or conduction of heat via simple update rules.
+- Describe entropy as a measure of the spatial distribution of energy.
+- Understand that small fluctuations can lead to a decrease in entropy, but the second law governs the global behaviour as time increases.
+- Explore how microscopic random motion relates to macroscopic thermodynamic behaviour.
+
+---
+
+# Background
+
+## Shannon entropy
+
+The Shannon entropy $S$ is given by
+
+$$
+S = -\sum_{i} p_i \log_2 p_i,
+$$
+
+where $p_i$ is the probability of a random event occurring.  The Shannon entropy is dimensionless as it is based on probabilities, and the units depend on the base of the logarithm.  In this case, we are using $\log_2$, so the units of $S$ are bits.
+
+---
+
+## Gibbs and Boltzmann's entropy
+
+In statistical mechanics, the Gibbs entropy is defined as
+
+$$
+S = -k_B \sum_{i} p_i \ln p_i
+$$
+
+where $p_i$ is the probability of the system being in microstate $i$, and $k_B$ is Boltzmann's constant.  The Gibbs entropy has units of Joules per Kelvin $J K^{-1}$, which comes from Boltzmann's constant $k_B$.
+
+If all microstates are equally probable, then we have $p_i = 1 / \Omega$, where $\Omega$ is the total number of states.  If we insert this probability in the Gibbs entropy, we obtain the common Boltzmann form of entropy
+
+$$
+S = -k_B \sum_{i} \frac{1}{\Omega} \ln\frac{1}{\Omega} = k_B \ln \Omega.
+$$
+
+We see that if there is only one possible microstate, then the entropy is given by $S=k_B\ln 1=0~J K^{-1}$, as is equal to zero. 
+
+---
+
+## Second law of thermodynamics
+
+In any isolated system, the total entropy can never decrease over time. It either increases or stays the same, reaching a maximum at equilibrium.  Entropy is a measure of how many microstates correspond to a given macrostate (how disordered or probable the system is).  The second law states that
+
+$$
+\Delta S_{\text{total}} \ge 0,
+$$
+
+where $\Delta S_{\text{total}}$ is the change in entropy of the entire system.  
+
+---
+
+## Convection and conduction
+
+Convection is the transfer of heat by the movement of molecules within a liquid or gas.  Hot regions become of liquid or gas have a low density, while cooler regions are denser.  This results in a flow of particles that moves heat. We will simulate convection by swapping the location of two adjacent particles. 
+
+Conduction is the transfer of heat through a material without the movement of the material itself.  This happens when faster-moving (hotter) particles collide with slower ones, passing on energy.  We will simulate conduction by the averaging of the heat energies of two adjacent particles.
+
+---
+
+# Simulation details
+
+```{figure}assets/images/Entropy.png
+:width: 90%
+:name: fig-entropy
+
+Schematic illustration of the simulation.  We start with an initial distribution of cold particles on the left and hot particles on the right.  The probability distribution measures where we find the hot particles.  At $t = 0$, these are all on the right-hand side, and this corresponds to an entropy of 0 bits.  As $t$ increases, we update the distribution and calculate $S_t$.   After many iterations, the entropy will tend to the maximum value, $S_{t>10^6} \approx k_B \ln 2 = 0.69~k_B$.
+
+We start by initialising the system, then letting the system evolve according to the physics rules we have established (convection or conduction).  We then calculate properties associated with the system, e.g. the Gibbs entropy associated with the temperature distribution, and then plot and analyse the results.  Strictly, the Gibbs entropy uses the microstates of a system, but it is often not possible to know or count all of the microstates of a system.  In such a case, we can use a coarse-grained version where we calculate the fraction of total energy (or hot particle content) in spatial region $i$.
+
+To achieve this, we will divide the total system into several (2 or 4) regions, and calculate the probability of finding a hot particle in each region.  We always require a probability distribution to calculate entropy, and we will use the probability distribution of heat in this simulation in the Gibbs formulation.  The heat probability distribution provides the necessary information about “where the heat is in the system,” which is what is needed to calculate the entropy.
+
+---
+
+# Physical Interpretation
+
+For a system with distinguishable regions and energy distribution, entropy can be related to our ability to localize energy (e.g., hot particles). The entropy measures the distribution of this energy throughout the system
+
+At the start of this simulation, all hot particles are on the right and all cold particles on the left, therefore, the system is highly ordered and low in entropy. As particles move and mix, it becomes increasingly difficult to determine where the hot particles are, indicating an increase in entropy. As particles swap places and energy becomes more uniformly distributed, the number of possible microstates increases, and so too does the entropy.
+
+This is exactly what is contained in the second law of thermodynamics, which states that in an isolated system, entropy tends to increase with time. In our simulation, there is no energy input or output, and yet the system evolves from a low-entropy state (localized energy) to a high-entropy state (spread-out energy). The entropy increase is a direct result of this spatial delocalization.
+
+# Pseudo Code
+
+Entropy Mixing Simulation (1D)
+
+Initialise a vector v of length N (e.g 100) with values 0 on the left for cold and 1 on the right for hot
+Set the total number of time steps T (e.g. 10,000), set the number of bins B for entropy calculation (e.g. 2, 4, or 8), and initialise a vector of length T to store entropy values S
+
+For each time step t from 1 to T:
+    Randomly choose an index i in 1,...,N
+    If i = 1:
+        Set neighbour index j = 2
+    Else if i = N:
+        Set neighbour index j = N-1
+    Else:
+        Randomly choose j = i - 1 or j = i + 1
+
+    Swap the values to simulate convection (v[i] ↔ v[j])
+    Compute the probability distribution of heat P
+    Divide v into two equal spatial bins b = {1,2}
+
+    For each bin b:
+        p_b = (sum of values in bin b) / (sum of all values)
+
+    Compute entropy at time step t:
+        S_t = -k_B ∑_{b=1}^{2} p_b ln p_b
+
+    Store S_t in entropy array
+    Plot v_t, P, and S_t every 100 iterations
+
+# Target Results
+
+# Further investigation
+
+Here are some suggestions for further development of the simulation.
+	1.	Different initial conditions: Try starting with alternating hot and cold particles or a Gaussian heat profile.
+	2.	Simulation of conduction: Replace the swapping of the particles at each iteration with averaging.  This would represent conduction rather than convection.
+	3.	Track mean hot particle position: Track and plot the mean position of hot particles over time.
+	4.	2D extension: Extend the system to a 2D lattice and observe entropy changes as particles diffuse in two dimensions.

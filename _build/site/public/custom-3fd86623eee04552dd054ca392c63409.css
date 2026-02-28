@@ -1,0 +1,5 @@
+/* Override Tailwind height utility on logo */
+img.h-9 {
+  height: 200px !important;   /* try 80–110px */
+  width: auto !important;
+}

@@ -1,0 +1,9 @@
+/* Hide "Made with MyST" bottom badge text */
+span.self-center.ml-2.text-sm {
+    display: none !important;
+}
+
+/* Also hide the parent link if needed */
+a:has(span.self-center.ml-2.text-sm) {
+    display: none !important;
+}

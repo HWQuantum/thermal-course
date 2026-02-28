@@ -1,0 +1,24 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: fcd2ee7d-14f1-4464-a380-ad08da06bf9f
+  # title:
+  # description:
+  # keywords: []
+  # authors: []
+  # github:
+  # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
+site:
+  template: book-theme
+  options:
+    logo: assets/images/logo.png
+    favicon: assets/images/logo.png
+  parts:  
+    footer: 
+      © 2026 Thermal Physics Simulations  
+      Physics Department — Heriot-Watt University
+    primary_sidebar_footer: primary-sidebar-footer.md  
+exports:
+  - format: html
+  - format: pdf
+    output: _build/exports/thermal-physics-simulations.pdf
