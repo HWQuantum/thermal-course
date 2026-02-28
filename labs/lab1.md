@@ -1,9 +1,7 @@
 ---
-authors:
-  - name: Physics, Heriot-Watt University
 exports:
   - format: pdf
-    output: _build/site/exports/lab1.pdf
+    output: _build/html/exports/lab1.pdf
 downloads:
   - title: Download PDF
     url: /exports/lab1.pdf
