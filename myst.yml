@@ -13,6 +13,7 @@ site:
   options:
     logo: assets/images/logo.png
     favicon: assets/images/logo.png
+    base_url: /thermal-course/
   parts:  
     footer: 
       © 2026 Thermal Physics Simulations  
