@@ -4,7 +4,7 @@ exports:
     output: _build/html/exports/lab1.pdf
 downloads:
   - title: Download PDF
-    url: /exports/lab1.pdf
+    url: /thermal-course/exports/lab1.pdf
 ---
 
 # Lab 1 - Entropy Increase

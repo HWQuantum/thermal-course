@@ -4,7 +4,7 @@ exports:
     output: _build/html/exports/lab2.pdf
 downloads:
   - title: Download PDF
-    url: /exports/lab2.pdf
+    url: /thermal-course/exports/lab2.pdf
 ---
 
 # Lab 2 - The Heat Diffusion Equation - Finite Difference
