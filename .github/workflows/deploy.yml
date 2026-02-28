@@ -37,7 +37,7 @@ jobs:
           node-version: 18.x
       - name: Install Jupyter Book (via myst)
         run: npm install -g jupyter-book
-            - name: Build site (HTML + PDFs)
+      - name: Build site (HTML + PDFs)
         run: |
           jupyter-book build --html
           jupyter-book build --pdf labs/lab1.md
