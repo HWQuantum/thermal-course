@@ -46,16 +46,16 @@ jobs:
         run: |
           jupyter-book build --html
 
-      - name: Install JupyterLite (with retro + server deps)
+      - name: Install JupyterLite (with server deps)
         run: |
-         python -m pip install --upgrade pip
-         python -m pip install jupyterlite jupyterlite-retro jupyter_server jupyterlab_server
+          python -m pip install --upgrade pip
+          python -m pip install jupyterlite jupyter_server jupyterlab_server
 
       - name: Build JupyterLite into the deployed site
         run: |
-         jupyter lite build \
-         --config lite/jupyter_lite_config.json \
-         --output-dir _build/html/lite
+          jupyter lite build \
+            --config lite/jupyter_lite_config.json \
+            --output-dir _build/html/lite
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
