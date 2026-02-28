@@ -8,7 +8,6 @@ site:
   actions:
     - title: PDF
       url: /exports/thermal-course.pdf
-      static: true
   options:
     logo: assets/images/logo.png
     favicon: assets/images/logo.png
