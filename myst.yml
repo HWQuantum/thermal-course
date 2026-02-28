@@ -20,6 +20,7 @@ site:
 exports:
   - format: html
   - format: pdf
+    template: typst/myst/lapreprint-typst
     output: _build/site/exports/thermal-course.pdf
 
 actions:

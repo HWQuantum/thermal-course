@@ -42,10 +42,11 @@ jobs:
       - name: Install Jupyter Book (via myst)
         run: npm install -g jupyter-book
 
-      - name: Install LaTeX (for PDF export)
+      - name: Install Typst (for PDF export)
         run: |
           sudo apt-get update
-          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended texlive-xetex
+          sudo apt-get install -y typst
+          typst --version
 
       - name: Build site (HTML + PDFs)
         run: |
