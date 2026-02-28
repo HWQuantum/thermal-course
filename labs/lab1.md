@@ -1,12 +1,14 @@
 ---
+authors:
+  - name: Physics, Heriot-Watt University
 exports:
   - format: pdf
+    template: typst/myst/lapreprint-typst
     output: ../_build/html/exports/lab1.pdf
 downloads:
   - title: Download PDF
     url: /thermal-course/exports/lab1.pdf
 ---
-
 # Lab 1 - Entropy Increase
 # Overview
 

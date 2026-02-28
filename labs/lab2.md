@@ -1,6 +1,9 @@
 ---
+authors:
+  - name: Physics, Heriot-Watt University
 exports:
   - format: pdf
+    template: typst/myst/lapreprint-typst
     output: ../_build/html/exports/lab2.pdf
 downloads:
   - title: Download PDF
