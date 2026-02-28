@@ -42,16 +42,16 @@ jobs:
       - name: Install Jupyter Book (via myst)
         run: npm install -g jupyter-book
 
-      # - name: Install LaTeX (for PDF export)
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended texlive-xetex
+      - name: Install LaTeX (for PDF export)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended texlive-xetex
 
-      # - name: Build site (HTML + PDFs)
-      #   run: |
-      #     jupyter-book build --html
-      #     jupyter-book build --pdf labs/lab1.md
-      #     jupyter-book build --pdf labs/lab2.md
+      - name: Build site (HTML + PDFs)
+        run: |
+          jupyter-book build --html
+          jupyter-book build --pdf labs/lab1.md
+          jupyter-book build --pdf labs/lab2.md
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
