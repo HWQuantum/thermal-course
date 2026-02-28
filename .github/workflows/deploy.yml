@@ -61,9 +61,9 @@ jobs:
       - name: Build JupyterLite into the deployed site
         run: |
           jupyter lite build \
-            --config lite/jupyter_lite_config.json \
-            --output-dir _build/html/lite \
-            --pyodide auto
+           --config lite/jupyter_lite_config.json \
+          --output-dir _build/html/lite \
+          --force
 
 
 
