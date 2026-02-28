@@ -1,3 +1,11 @@
+---
+authors:
+  - name: Physics, Heriot-Watt University
+exports:
+  - format: pdf
+    output: _build/site/exports/lab2.pdf
+---
+
 
 # Lab 2 - The Heat Diffusion Equation - Finite Difference
 # Overview

@@ -1,4 +1,10 @@
-
+---
+authors:
+  - name: Physics, Heriot-Watt University
+exports:
+  - format: pdf
+    output: _build/site/exports/lab1.pdf
+---
 
 # Lab 1 - Entropy Increase
 # Overview

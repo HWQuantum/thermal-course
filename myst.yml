@@ -22,3 +22,11 @@ exports:
   - format: html
   - format: pdf
     output: _build/site/exports/thermal-course.pdf
+
+actions:
+  - title: Lab 1 PDF
+    url: /exports/lab1.pdf
+    static: true
+  - title: Lab 2 PDF
+    url: /exports/lab2.pdf
+    static: true

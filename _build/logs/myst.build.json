@@ -1,6 +1,8 @@
 {
   "input": {
-    "files": [],
+    "files": [
+      "labs/lab2.md"
+    ],
     "opts": {
       "execute": false,
       "executeParallel": 9,
@@ -28,14 +30,14 @@
   "exports": [
     {
       "format": "pdf",
-      "output": "/Users/jl325/Desktop/thermal-course/_build/exports/index.pdf",
+      "output": "/Users/jl325/Desktop/thermal-course/labs/_build/site/exports/lab2.pdf",
       "articles": [
         {
-          "file": "/Users/jl325/Desktop/thermal-course/index.md",
+          "file": "/Users/jl325/Desktop/thermal-course/labs/lab2.md",
           "level": 0
         }
       ],
-      "$file": "/Users/jl325/Desktop/thermal-course/index.md",
+      "$file": "/Users/jl325/Desktop/thermal-course/labs/lab2.md",
       "$project": "/Users/jl325/Desktop/thermal-course"
     }
   ]
