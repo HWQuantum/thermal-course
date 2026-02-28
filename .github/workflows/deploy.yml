@@ -37,12 +37,16 @@ jobs:
           node-version: 18.x
       - name: Install Jupyter Book (via myst)
         run: npm install -g jupyter-book
-      - name: Build HTML Assets
-        run: jupyter-book build --html
+            - name: Build site (HTML + PDFs)
+        run: |
+          jupyter-book build --html
+          jupyter-book build --pdf labs/lab1.md
+          jupyter-book build --pdf labs/lab2.md
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './_build/html'
+          path: './_build/site'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
