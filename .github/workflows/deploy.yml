@@ -53,6 +53,17 @@ jobs:
           jupyter-book build --pdf labs/lab1.md
           jupyter-book build --pdf labs/lab2.md
 
+      - name: Install JupyterLite
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install jupyterlite
+
+      - name: Build JupyterLite into the deployed site
+        run: |
+          jupyter lite build \
+            --config lite/jupyter_lite_config.json \
+            --output-dir _build/html/lite
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
