@@ -52,16 +52,12 @@ $$
 
 where $p_i$ is the probability of a random event occurring.  The Shannon entropy is dimensionless as it is based on probabilities, and the units depend on the base of the logarithm.  In this case, we are using $\log_2$, so the units of $S$ are bits.
 
-<div style="border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
-  <iframe
-    src="https://hwquantum.github.io/thermal-course/lite/lab/index.html?path=lite_coin_entropy.ipynb"
-    width="100%"
-    height="900"
-    style="border:0;"
-    loading="lazy"
-    allow="clipboard-read; clipboard-write"
-  ></iframe>
-</div>
+<iframe
+  src="/thermal-course/lite/retro/index.html?path=lite_coin_entropy.ipynb"
+  width="100%"
+  height="900"
+  style="border:0; border-radius:12px;"
+></iframe>
 ---
 
 ## Gibbs and Boltzmann's entropy
