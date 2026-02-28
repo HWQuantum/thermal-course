@@ -42,25 +42,10 @@ jobs:
       - name: Install Jupyter Book (via myst)
         run: npm install -g jupyter-book
 
-      - name: Install Typst (for PDF export)
+      - name: Install LaTeX (for PDF export)
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl tar xz-utils
-
-          # Download latest Typst release for Linux x86_64 (musl build)
-          TYPST_URL=$(curl -s https://api.github.com/repos/typst/typst/releases/latest \
-            | grep browser_download_url \
-            | grep "x86_64-unknown-linux-musl.tar.xz" \
-            | cut -d '"' -f 4)
-
-          echo "Downloading: $TYPST_URL"
-          curl -L "$TYPST_URL" -o typst.tar.xz
-          tar -xJf typst.tar.xz
-
-          # The tar contains a folder like typst-x.y.z-x86_64-unknown-linux-musl/typst
-          sudo mv typst-*/typst /usr/local/bin/typst
-
-          typst --version
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended texlive-xetex
 
       - name: Build site (HTML + PDFs)
         run: |
