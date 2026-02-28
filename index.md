@@ -1,4 +1,7 @@
 ---
+exports:
+  - format: pdf
+------
 title: Thermal Physics Simulations
 ---
 

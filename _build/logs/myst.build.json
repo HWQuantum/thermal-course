@@ -25,5 +25,18 @@
       "keepHost": false
     }
   },
-  "exports": []
+  "exports": [
+    {
+      "format": "pdf",
+      "output": "/Users/jl325/Desktop/thermal-course/_build/exports/index.pdf",
+      "articles": [
+        {
+          "file": "/Users/jl325/Desktop/thermal-course/index.md",
+          "level": 0
+        }
+      ],
+      "$file": "/Users/jl325/Desktop/thermal-course/index.md",
+      "$project": "/Users/jl325/Desktop/thermal-course"
+    }
+  ]
 }
