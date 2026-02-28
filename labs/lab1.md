@@ -52,16 +52,244 @@ $$
 
 where $p_i$ is the probability of a random event occurring.  The Shannon entropy is dimensionless as it is based on probabilities, and the units depend on the base of the logarithm.  In this case, we are using $\log_2$, so the units of $S$ are bits.
 
-<div style="border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
-  <iframe
-    src="https://hwquantum.github.io/thermal-course/lite/lab/index.html?path=lite_coin_entropy.ipynb"
-    width="100%"
-    height="900"
-    style="border:0;"
-    loading="lazy"
-    allow="clipboard-read; clipboard-write"
-  ></iframe>
+<div id="coin-entropy-widget" style="border:1px solid #e5e7eb;border-radius:12px;padding:16px;max-width:980px;">
+  <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+    <div style="font-weight:600;font-size:18px;">Coin bias → Shannon entropy</div>
+    <div id="summary" style="font-size:16px;font-weight:600;"></div>
+  </div>
+
+  <div style="margin-top:10px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+    <label for="pSlider" style="min-width:130px;font-weight:600;">p(Heads)</label>
+    <input id="pSlider" type="range" min="0" max="1" step="0.01" value="0.50" style="flex:1;min-width:260px;">
+    <div id="pVal" style="width:64px;text-align:right;font-variant-numeric:tabular-nums;">0.50</div>
+  </div>
+
+  <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    <div style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
+      <div style="font-weight:600;margin-bottom:6px;">Entropy H(p) [bits]</div>
+      <svg id="plotH" viewBox="0 0 460 260" width="100%" height="260" aria-label="Entropy plot"></svg>
+    </div>
+    <div style="border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
+      <div style="font-weight:600;margin-bottom:6px;">Effective modes 2^H(p)</div>
+      <svg id="plotN" viewBox="0 0 460 260" width="100%" height="260" aria-label="Modes plot"></svg>
+    </div>
+    <div style="grid-column:1 / -1;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
+      <div style="font-weight:600;margin-bottom:6px;">Outcome probabilities</div>
+      <svg id="plotBar" viewBox="0 0 940 260" width="100%" height="260" aria-label="Bar chart"></svg>
+    </div>
+  </div>
+
+  <div style="margin-top:10px;color:#6b7280;font-size:14px;">
+    Tip: maximum entropy occurs at p = 0.5 (fair coin). At p = 0 or 1 the outcome is fully predictable.
+  </div>
 </div>
+
+<script>
+(() => {
+  const el = document.getElementById("coin-entropy-widget");
+  if (!el) return;
+
+  const slider = el.querySelector("#pSlider");
+  const pVal = el.querySelector("#pVal");
+  const summary = el.querySelector("#summary");
+  const plotH = el.querySelector("#plotH");
+  const plotN = el.querySelector("#plotN");
+  const plotBar = el.querySelector("#plotBar");
+
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const Hbits = (p) => {
+    const eps = 1e-12;
+    p = clamp(p, eps, 1 - eps);
+    const q = 1 - p;
+    return -(p * Math.log2(p) + q * Math.log2(q));
+  };
+
+  // Simple SVG helpers
+  const clear = (svg) => { while (svg.firstChild) svg.removeChild(svg.firstChild); };
+  const line = (svg, x1,y1,x2,y2, stroke="#111827", w=1) => {
+    const e = document.createElementNS("http://www.w3.org/2000/svg","line");
+    e.setAttribute("x1",x1); e.setAttribute("y1",y1);
+    e.setAttribute("x2",x2); e.setAttribute("y2",y2);
+    e.setAttribute("stroke",stroke); e.setAttribute("stroke-width",w);
+    svg.appendChild(e); return e;
+  };
+  const path = (svg, d, stroke="#111827", w=2, fill="none") => {
+    const e = document.createElementNS("http://www.w3.org/2000/svg","path");
+    e.setAttribute("d", d);
+    e.setAttribute("stroke", stroke);
+    e.setAttribute("stroke-width", w);
+    e.setAttribute("fill", fill);
+    e.setAttribute("stroke-linejoin","round");
+    e.setAttribute("stroke-linecap","round");
+    svg.appendChild(e); return e;
+  };
+  const circle = (svg, cx,cy,r, fill="#111827") => {
+    const e = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    e.setAttribute("cx",cx); e.setAttribute("cy",cy); e.setAttribute("r",r);
+    e.setAttribute("fill",fill);
+    svg.appendChild(e); return e;
+  };
+  const text = (svg, x,y, str, size=12, anchor="start", fill="#111827") => {
+    const e = document.createElementNS("http://www.w3.org/2000/svg","text");
+    e.setAttribute("x",x); e.setAttribute("y",y);
+    e.setAttribute("fill",fill);
+    e.setAttribute("font-size",size);
+    e.setAttribute("font-family","system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif");
+    e.setAttribute("text-anchor",anchor);
+    e.textContent = str;
+    svg.appendChild(e); return e;
+  };
+  const rect = (svg, x,y,w,h, fill="#111827") => {
+    const e = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    e.setAttribute("x",x); e.setAttribute("y",y);
+    e.setAttribute("width",w); e.setAttribute("height",h);
+    e.setAttribute("fill",fill);
+    svg.appendChild(e); return e;
+  };
+
+  function drawAxes(svg, W, H, padL, padR, padT, padB, xLabel, yLabel, yTicks) {
+    // Frame
+    const x0 = padL, y0 = H - padB, x1 = W - padR, y1 = padT;
+    // axes
+    line(svg, x0, y0, x1, y0, "#111827", 1);
+    line(svg, x0, y0, x0, y1, "#111827", 1);
+
+    // x ticks (0..1)
+    for (let i=0;i<=5;i++){
+      const t=i/5, x = x0 + t*(x1-x0);
+      line(svg,x,y0,x,y0+4,"#111827",1);
+      text(svg,x,y0+18,(t).toFixed(1),11,"middle","#374151");
+    }
+    text(svg,(x0+x1)/2, H-6, xLabel, 12, "middle", "#111827");
+
+    // y ticks
+    yTicks.forEach(({v,label})=>{
+      const y = y0 - v*(y0-y1);
+      line(svg, x0-4, y, x0, y, "#111827", 1);
+      text(svg, x0-8, y+4, label, 11, "end", "#374151");
+      // faint grid
+      line(svg, x0, y, x1, y, "#e5e7eb", 1);
+    });
+
+    // y label (simple)
+    text(svg, 12, (y0+y1)/2, yLabel, 12, "middle", "#111827")
+      .setAttribute("transform", `rotate(-90 12 ${(y0+y1)/2})`);
+    return {x0,y0,x1,y1};
+  }
+
+  function drawCurve(svg, box, fY, yMax) {
+    const {x0,y0,x1,y1} = box;
+    const n=400;
+    let d="";
+    for (let i=0;i<=n;i++){
+      const p=i/n;
+      const y=fY(p);
+      const xPix = x0 + p*(x1-x0);
+      const yPix = y0 - (y/yMax)*(y0-y1);
+      d += (i===0 ? "M":"L") + xPix.toFixed(2) + " " + yPix.toFixed(2) + " ";
+    }
+    path(svg, d, "#1f2937", 2);
+  }
+
+  function drawPoint(svg, box, p, y, yMax) {
+    const {x0,y0,x1,y1} = box;
+    const xPix = x0 + p*(x1-x0);
+    const yPix = y0 - (y/yMax)*(y0-y1);
+    circle(svg, xPix, yPix, 5, "#111827");
+  }
+
+  function render(p) {
+    p = clamp(p, 0, 1);
+    const q = 1 - p;
+    const H = Hbits(p);
+    const Neff = Math.pow(2, H);
+
+    pVal.textContent = p.toFixed(2);
+    summary.textContent = `H = ${H.toFixed(3)} bits, 2^H = ${Neff.toFixed(3)}`;
+
+    // Plot H
+    clear(plotH);
+    const WH = 460, HH = 260;
+    const boxH = drawAxes(
+      plotH, WH, HH, 52, 18, 16, 40,
+      "p (heads)", "H(p)", [
+        {v:0.0,label:"0.0"},
+        {v:0.25,label:"0.25"},
+        {v:0.50,label:"0.50"},
+        {v:0.75,label:"0.75"},
+        {v:1.00,label:"1.0"}
+      ]
+    );
+    drawCurve(plotH, boxH, (x)=>Hbits(x), 1.0);
+    drawPoint(plotH, boxH, p, H, 1.0);
+
+    // Plot Neff
+    clear(plotN);
+    const boxN = drawAxes(
+      plotN, WH, HH, 64, 18, 16, 40,
+      "p (heads)", "2^H", [
+        {v:(1.0-0.9)/(2.1-0.9), label:"1.0"},
+        {v:(1.2-0.9)/(2.1-0.9), label:"1.2"},
+        {v:(1.5-0.9)/(2.1-0.9), label:"1.5"},
+        {v:(1.8-0.9)/(2.1-0.9), label:"1.8"},
+        {v:(2.1-0.9)/(2.1-0.9), label:"2.1"}
+      ]
+    );
+    // custom mapping for this axis: y in [0.9,2.1]
+    const yMin=0.9, yMax=2.1;
+    const {x0,y0,x1,y1} = boxN;
+    // draw curve
+    let d="";
+    const n=400;
+    for (let i=0;i<=n;i++){
+      const pp=i/n;
+      const yy=Math.pow(2, Hbits(pp));
+      const xPix=x0 + pp*(x1-x0);
+      const yPix=y0 - ((yy-yMin)/(yMax-yMin))*(y0-y1);
+      d += (i===0?"M":"L") + xPix.toFixed(2) + " " + yPix.toFixed(2) + " ";
+    }
+    path(plotN, d, "#1f2937", 2);
+    // point
+    const xPix=x0 + p*(x1-x0);
+    const yPix=y0 - ((Neff-yMin)/(yMax-yMin))*(y0-y1);
+    circle(plotN, xPix, yPix, 5, "#111827");
+
+    // Bar chart
+    clear(plotBar);
+    const WB=940, HB=260;
+    // axes
+    const padL=70, padR=18, padT=16, padB=42;
+    const bx0=padL, by0=HB-padB, bx1=WB-padR, by1=padT;
+    line(plotBar, bx0, by0, bx1, by0, "#111827", 1);
+    line(plotBar, bx0, by0, bx0, by1, "#111827", 1);
+    // y grid/ticks 0..1
+    for (let i=0;i<=5;i++){
+      const t=i/5;
+      const y=by0 - t*(by0-by1);
+      line(plotBar, bx0-4, y, bx0, y, "#111827", 1);
+      text(plotBar, bx0-8, y+4, t.toFixed(1), 11, "end", "#374151");
+      line(plotBar, bx0, y, bx1, y, "#e5e7eb", 1);
+    }
+    text(plotBar, 18, (by0+by1)/2, "Probability", 12, "middle", "#111827")
+      .setAttribute("transform", `rotate(-90 18 ${(by0+by1)/2})`);
+
+    const barW=180;
+    const gap=180;
+    const xHeads = bx0 + 180;
+    const xTails = xHeads + barW + gap;
+    const hHeads = p*(by0-by1);
+    const hTails = q*(by0-by1);
+
+    rect(plotBar, xHeads, by0-hHeads, barW, hHeads, "#4b5563");
+    rect(plotBar, xTails, by0-hTails, barW, hTails, "#9ca3af");
+    text(plotBar, xHeads + barW/2, by0+20, "Heads", 12, "middle", "#111827");
+    text(plotBar, xTails + barW/2, by0+20, "Tails", 12, "middle", "#111827");
+  }
+
+  slider.addEventListener("input", () => render(parseFloat(slider.value)));
+  render(parseFloat(slider.value));
+})();
+</script>
 ---
 
 ## Gibbs and Boltzmann's entropy
