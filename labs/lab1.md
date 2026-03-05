@@ -82,7 +82,6 @@ where $p_i$ is the probability of a random event occurring.  The Shannon entropy
   <div style="margin-top:10px;color:#6b7280;font-size:14px;">
     Tip: maximum entropy occurs at p = 0.5 (fair coin). At p = 0 or 1 the outcome is fully predictable.
   </div>
-</div>
 
 <script>
 (() => {
@@ -290,6 +289,7 @@ where $p_i$ is the probability of a random event occurring.  The Shannon entropy
   render(parseFloat(slider.value));
 })();
 </script>
+</div>
 ---
 
 ## Gibbs and Boltzmann's entropy
