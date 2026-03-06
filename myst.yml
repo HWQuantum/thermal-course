@@ -8,6 +8,14 @@ project:
 
 site:
   template: book-theme
+  # Define exactly what appears in the sidebar
+  nav:
+    - title: Labs
+      children:
+        - file: lab1.md
+        - file: lab2.md
+        - file: lab3.md
+        - file: lab4.md
   options:
     logo: assets/images/logo.png
     favicon: assets/images/logo.png
