@@ -2,6 +2,9 @@ version: 1
 
 project:
   id: fcd2ee7d-14f1-4464-a380-ad08da06bf9f
+  exclude:
+    - Lite/**
+    - Lite.ipynb
 
 site:
   template: book-theme
